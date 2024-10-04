@@ -1,9 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask, jsonify, render_template
-from urllib.parse import urljoin  # Use to correctly join URLs
+from urllib.parse import urljoin
+import vlc  # VLC for video control (optional if you manage local playback)
 
 app = Flask(__name__)
+
+# VLC instance (optional)
+player = vlc.Instance()
 
 # List of directories to scrape for videos
 VIDEO_DIRECTORIES = [
@@ -32,7 +36,7 @@ def fetch_videos_from_directory(directory_url):
                 })
         return videos
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching videos from {directory_url}: {e}")  # Log the error
+        print(f"Error fetching videos from {directory_url}: {e}")
         return []
 
 # Fetch videos from all directories
