@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Video Platform</title>
-
     <!-- Video.js CSS -->
     <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
-
+    
+    <!-- Custom Styles -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,7 +15,6 @@
             margin: 0;
             padding: 0;
         }
-
         .container {
             width: 90%;
             margin: 20px auto;
@@ -24,14 +23,12 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
         .video-gallery {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
         }
-
         .video-item {
             background-color: #fff;
             border: 1px solid #ccc;
@@ -41,19 +38,16 @@
             width: 300px;
             text-align: center;
         }
-
         .video-item h3 {
             font-size: 1em;
             margin-bottom: 10px;
             color: #333;
         }
-
         .video-item video {
             width: 100%;
             height: auto;
             border-radius: 8px;
         }
-
         /* Advanced Responsive Design */
         @media (max-width: 600px) {
             .video-item {
@@ -63,14 +57,13 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>Advanced Video Platform</h1>
     <div class="video-gallery">
         {% for video in videos %}
         <div class="video-item">
             <h3>{{ video.name.replace('%20', ' ').replace('.mp4', '') }}</h3> <!-- Clean video name -->
-            
+
             <!-- Video.js Player -->
             <video
                 id="my-video-{{ loop.index }}"
@@ -86,12 +79,10 @@
                 <source src="{{ video.url }}" type="application/x-mpegURL" />
                 Your browser does not support the video tag.
             </video>
-
         </div>
         {% endfor %}
     </div>
 </div>
-
 <!-- Video.js JavaScript -->
 <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 
