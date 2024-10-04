@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask, jsonify, render_template
+from urllib.parse import urljoin  # Use to correctly join URLs
 
 app = Flask(__name__)
 
@@ -17,20 +18,21 @@ VIDEO_DIRECTORIES = [
 def fetch_videos_from_directory(directory_url):
     try:
         response = requests.get(directory_url)
-        response.raise_for_status()
+        response.raise_for_status()  # Raise an error for bad responses
         soup = BeautifulSoup(response.content, 'html.parser')
 
         videos = []
         for link in soup.find_all('a'):
             href = link.get('href')
             if href.endswith('.mp4'):
-                video_url = directory_url + href
+                video_url = urljoin(directory_url, href)  # Join URLs correctly
                 videos.append({
                     'name': href.split('/')[-1],
                     'url': video_url
                 })
         return videos
     except requests.exceptions.RequestException as e:
+        print(f"Error fetching videos from {directory_url}: {e}")  # Log the error
         return []
 
 # Fetch videos from all directories
@@ -51,5 +53,4 @@ def index():
     videos = fetch_all_videos()
     return render_template('index.html', videos=videos)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# You don't need app.run() when deploying on Vercel
