@@ -2,6 +2,8 @@ from flask import Flask, jsonify, render_template
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+import os
+import subprocess
 
 app = Flask(__name__)
 
@@ -14,7 +16,15 @@ VIDEO_DIRECTORIES = [
     "https://ocean.marcus.pw:8008/Packs/%5BPornhubPremium%5D%20Purple%20Bitch%20%5BMegaPack%5D/"
 ]
 
-# Function to scrape video links from a directory
+# Function to generate thumbnail
+def generate_thumbnail(video_url, output_thumbnail):
+    try:
+        command = ['ffmpeg', '-i', video_url, '-ss', '00:00:10', '-vframes', '1', output_thumbnail]
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error generating thumbnail for {video_url}: {e}")
+
+# Function to scrape video links and generate thumbnails
 def fetch_videos_from_directory(directory_url):
     try:
         response = requests.get(directory_url)
@@ -26,9 +36,11 @@ def fetch_videos_from_directory(directory_url):
             href = link.get('href')
             if href.endswith('.mp4'):
                 video_url = urljoin(directory_url, href)
+                thumbnail_url = video_url.replace('.mp4', '.jpg')  # Assume thumbnail follows same URL convention
                 videos.append({
                     'name': href.split('/')[-1],
-                    'url': video_url
+                    'url': video_url,
+                    'thumbnail': thumbnail_url
                 })
         return videos
     except requests.exceptions.RequestException as e:
