@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Video Platform</title>
+
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -50,17 +54,6 @@
             border-radius: 8px;
         }
 
-        .video-item img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .video-item .playback-speed {
-            margin-top: 10px;
-        }
-
         /* Advanced Responsive Design */
         @media (max-width: 600px) {
             .video-item {
@@ -78,36 +71,29 @@
         <div class="video-item">
             <h3>{{ video.name.replace('%20', ' ').replace('.mp4', '') }}</h3> <!-- Clean video name -->
             
-            <!-- Video Player with Fallback for Unsupported Browsers -->
-            <video controls poster="{{ video.url }}.jpg">  <!-- Thumbnail as poster image -->
-                <source src="{{ video.url }}" type="video/mp4">
+            <!-- Video.js Player -->
+            <video
+                id="my-video-{{ loop.index }}"
+                class="video-js vjs-default-skin"
+                controls
+                preload="auto"
+                width="100%"
+                height="auto"
+                poster="{{ video.url }}.jpg"
+                data-setup="{}">
+                <source src="{{ video.url }}" type="video/mp4" />
+                <source src="{{ video.url }}" type="video/webm" />
+                <source src="{{ video.url }}" type="application/x-mpegURL" />
                 Your browser does not support the video tag.
             </video>
-            
-            <!-- Playback speed controls -->
-            <div class="playback-speed">
-                <label for="speed">Speed:</label>
-                <select id="speed" onchange="changeSpeed(this, '{{ video.url }}')">
-                    <option value="1">Normal</option>
-                    <option value="1.25">1.25x</option>
-                    <option value="1.5">1.5x</option>
-                    <option value="2">2x</option>
-                </select>
-            </div>
+
         </div>
         {% endfor %}
     </div>
 </div>
 
-<script>
-    // Function to change playback speed
-    function changeSpeed(select, videoUrl) {
-        const video = document.querySelector(`video[src="${videoUrl}"]`);
-        if (video) {
-            video.playbackRate = parseFloat(select.value);
-        }
-    }
-</script>
+<!-- Video.js JavaScript -->
+<script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 
 </body>
-</html> 
+</html>
