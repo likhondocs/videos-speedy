@@ -3,25 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Platform</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Advanced Video Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .video-item {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .video-item h3 {
+            font-size: 1em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .video-item video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .video-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .video-item .playback-speed {
+            margin-top: 10px;
+        }
+
+        /* Advanced Responsive Design */
+        @media (max-width: 600px) {
+            .video-item {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Modern Video Platform</h1>
-    </div>
-    <div class="container">
-        <div class="video-gallery">
-            {% for video in videos %}
-            <div class="video-item">
-                <h3>{{ video.name }}</h3>
-                <video width="640" height="360" controls>
-                    <source src="{{ video.url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+
+<div class="container">
+    <h1>Advanced Video Platform</h1>
+    <div class="video-gallery">
+        {% for video in videos %}
+        <div class="video-item">
+            <h3>{{ video.name.replace('%20', ' ').replace('.mp4', '') }}</h3> <!-- Clean video name -->
+            
+            <!-- Video Player with Fallback for Unsupported Browsers -->
+            <video controls poster="{{ video.url }}.jpg">  <!-- Thumbnail as poster image -->
+                <source src="{{ video.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            
+            <!-- Playback speed controls -->
+            <div class="playback-speed">
+                <label for="speed">Speed:</label>
+                <select id="speed" onchange="changeSpeed(this, '{{ video.url }}')">
+                    <option value="1">Normal</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
+</div>
+
+<script>
+    // Function to change playback speed
+    function changeSpeed(select, videoUrl) {
+        const video = document.querySelector(`video[src="${videoUrl}"]`);
+        if (video) {
+            video.playbackRate = parseFloat(select.value);
+        }
+    }
+</script>
+
 </body>
 </html>
