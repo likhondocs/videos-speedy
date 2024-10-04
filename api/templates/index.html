@@ -291,7 +291,7 @@
         async function fetchVideos() {
             try {
                 elements.loadingSpinner.style.display = 'block';
-                const response = await fetch('https://api.example.com/videos');
+                const response = await fetch('https://videos-speedy.vercel.app/videos');
                 videos = await response.json();
                 renderVideos();
             } catch (error) {
