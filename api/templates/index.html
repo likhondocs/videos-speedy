@@ -140,6 +140,26 @@
             color: var(--text-primary);
         }
 
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .load-more button {
+            background-color: var(--accent-color);
+            color: var(--text-primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .load-more button:hover {
+            background-color: #45a049;
+        }
+
         footer {
             background-color: var(--secondary-bg);
             padding: 2rem 0;
@@ -220,6 +240,9 @@
             <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: var(--accent-color);"></i>
         </div>
         <div id="video-gallery" class="video-gallery"></div>
+        <div class="load-more">
+            <button id="load-more-button">Load More</button>
+        </div>
     </main>
 
     <footer>
@@ -235,7 +258,7 @@
         let videos = [];
         let currentPage = 1;
         const videosPerPage = 6;
-        let ageConfirmed = false;
+        let ageConfirmed = localStorage.getItem('ageConfirmed') === 'true'; // Check if user already confirmed age
 
         // DOM Elements
         const elements = {
@@ -243,14 +266,17 @@
             loadingSpinner: document.getElementById('loading-spinner'),
             ageModal: document.getElementById('age-modal'),
             agreeButton: document.getElementById('agree-button'),
-            declineButton: document.getElementById('decline-button')
+            declineButton: document.getElementById('decline-button'),
+            loadMoreButton: document.getElementById('load-more-button')
         };
 
         // Fetch videos from API
         async function fetchVideos() {
             try {
-                const response = await fetch('https://videos-speedy.vercel.app/videos');
-                videos = await response.json();
+                elements.loadingSpinner.style.display = 'flex';
+                const response = await fetch(`https://videos-speedy.vercel.app/videos?page=${currentPage}`);
+                const newVideos = await response.json();
+                videos = [...videos, ...newVideos];
                 renderVideos();
             } catch (error) {
                 console.error('Error fetching videos:', error);
@@ -262,7 +288,6 @@
 
         // Render videos for current page
         function renderVideos() {
-            elements.videoGallery.innerHTML = '';
             const startIndex = (currentPage - 1) * videosPerPage;
             const endIndex = startIndex + videosPerPage;
             const currentVideos = videos.slice(startIndex, endIndex);
@@ -315,6 +340,7 @@
 
             elements.agreeButton.onclick = () => {
                 ageConfirmed = true;
+                localStorage.setItem('ageConfirmed', 'true'); // Store age confirmation
                 elements.ageModal.style.display = 'none';
                 player.play();
             };
@@ -323,6 +349,12 @@
                 elements.ageModal.style.display = 'none';
             };
         }
+
+        // Load more videos on button click
+        elements.loadMoreButton.addEventListener('click', () => {
+            currentPage++;
+            fetchVideos();
+        });
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', fetchVideos);
