@@ -1,13 +1,9 @@
+from flask import Flask, jsonify, render_template
 import requests
 from bs4 import BeautifulSoup
-from flask import Flask, jsonify, render_template
 from urllib.parse import urljoin
-import vlc  # VLC for video control (optional if you manage local playback)
 
 app = Flask(__name__)
-
-# VLC instance (optional)
-player = vlc.Instance()
 
 # List of directories to scrape for videos
 VIDEO_DIRECTORIES = [
@@ -57,4 +53,5 @@ def index():
     videos = fetch_all_videos()
     return render_template('index.html', videos=videos)
 
-# You don't need app.run() when deploying on Vercel
+if __name__ == '__main__':
+    app.run(debug=True)
