@@ -18,14 +18,14 @@ VIDEO_DIRECTORIES = [
 def fetch_videos_from_directory(directory_url):
     try:
         response = requests.get(directory_url)
-        response.raise_for_status()  # Raise an error for bad responses
+        response.raise_for_status()
         soup = BeautifulSoup(response.content, 'html.parser')
 
         videos = []
         for link in soup.find_all('a'):
             href = link.get('href')
             if href.endswith('.mp4'):
-                video_url = urljoin(directory_url, href)  # Join URLs correctly
+                video_url = urljoin(directory_url, href)
                 videos.append({
                     'name': href.split('/')[-1],
                     'url': video_url
