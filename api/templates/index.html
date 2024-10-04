@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pogo PomPom BD - Single Streams!</title>
-    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+    <title>Advanced Video Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-bg: #121212;
-            --secondary-bg: #1d1d1d;
-            --card-bg: #252525;
+            --primary-bg: #0f0f0f;
+            --secondary-bg: #1a1a1a;
             --text-primary: #ffffff;
             --text-secondary: #aaaaaa;
-            --accent-color: #4caf50;
+            --accent-color: #ff4500;
+            --card-bg: #2a2a2a;
         }
 
         * {
@@ -23,7 +22,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--primary-bg);
             color: var(--text-primary);
             line-height: 1.6;
@@ -38,14 +37,59 @@
         header {
             background-color: var(--secondary-bg);
             padding: 1rem 0;
-            margin-bottom: 1rem;
-            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            margin: 1rem 0;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            width: 100%;
+            margin-left: 0.5rem;
+        }
+
+        .search-bar input:focus {
+            outline: none;
         }
 
         .video-gallery {
@@ -57,24 +101,22 @@
 
         .video-item {
             background-color: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
 
         .video-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .video-wrapper {
+        .video-thumbnail {
             position: relative;
             padding-top: 56.25%;
             overflow: hidden;
         }
 
-        .video-preview, .video-thumbnail {
+        .video-thumbnail img {
             position: absolute;
             top: 0;
             left: 0;
@@ -84,6 +126,12 @@
         }
 
         .video-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -92,42 +140,32 @@
             opacity: 1;
         }
 
-        .video-overlay {
+        .video-duration {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .video-item:hover .video-overlay {
-            opacity: 1;
-        }
-
-        .play-button {
-            font-size: 3rem;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
             color: var(--text-primary);
-            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 0.8rem;
         }
 
         .video-info {
             padding: 1rem;
         }
 
-        .video-info h3 {
-            font-size: 1.1rem;
+        .video-title {
+            font-size: 1rem;
+            font-weight: bold;
             margin-bottom: 0.5rem;
         }
 
         .video-meta {
-            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
             color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         .pagination {
@@ -138,7 +176,7 @@
         }
 
         .pagination button {
-            background-color: var(--secondary-bg);
+            background-color: var(--card-bg);
             color: var(--text-primary);
             border: none;
             padding: 0.5rem 1rem;
@@ -157,94 +195,67 @@
             cursor: not-allowed;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1001;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-        }
-
-        .modal-buttons {
+        #loading-spinner {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .btn-primary {
-            background-color: var(--accent-color);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary-bg);
-            color: var(--text-primary);
+            align-items: center;
+            height: 100px;
         }
 
         @media (max-width: 768px) {
-            .video-gallery {
-                grid-template-columns: 1fr;
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+            }
+
+            .search-bar {
+                margin-top: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div id="age-modal" class="modal">
-        <div class="modal-content">
-            <h2>Age Verification</h2>
-            <p>Please confirm that you are 18 years or older to continue.</p>
-            <div class="modal-buttons">
-                <button id="agree-button" class="btn btn-primary">I am 18 or older</button>
-                <button id="decline-button" class="btn btn-secondary">Exit</button>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">VideoHub</div>
+                <nav class="nav-links">
+                    <a href="#"><i class="fas fa-home"></i> Home</a>
+                    <a href="#"><i class="fas fa-fire"></i> Trending</a>
+                    <a href="#"><i class="fas fa-history"></i> History</a>
+                    <a href="#"><i class="fas fa-user"></i> Profile</a>
+                </nav>
             </div>
         </div>
-    </div>
-
-    <header>
-        <h1>Advanced Video Platform</h1>
     </header>
 
     <main class="container">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search videos...">
+        </div>
+
+        <div id="loading-spinner">
+            <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: var(--accent-color);"></i>
+        </div>
+
         <div id="video-gallery" class="video-gallery"></div>
+
         <div id="pagination" class="pagination"></div>
     </main>
 
-    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
     <script>
         let videos = [];
         let currentPage = 1;
-        const videosPerPage = 6;
-        let ageConfirmed = false;
+        const videosPerPage = 12;
 
         const elements = {
             videoGallery: document.getElementById('video-gallery'),
-            ageModal: document.getElementById('age-modal'),
-            agreeButton: document.getElementById('agree-button'),
-            declineButton: document.getElementById('decline-button'),
+            loadingSpinner: document.getElementById('loading-spinner'),
             pagination: document.getElementById('pagination')
         };
 
@@ -257,6 +268,8 @@
             } catch (error) {
                 console.error('Error fetching videos:', error);
                 elements.videoGallery.innerHTML = '<p>Error loading videos. Please try again later.</p>';
+            } finally {
+                elements.loadingSpinner.style.display = 'none';
             }
         }
 
@@ -266,74 +279,44 @@
             const endIndex = startIndex + videosPerPage;
             const currentVideos = videos.slice(startIndex, endIndex);
 
-            currentVideos.forEach((video, index) => {
-                const videoItem = createVideoElement(video, startIndex + index);
+            currentVideos.forEach((video) => {
+                const videoItem = createVideoElement(video);
                 elements.videoGallery.appendChild(videoItem);
             });
         }
 
-        function createVideoElement(video, index) {
+        function createVideoElement(video) {
             const div = document.createElement('div');
             div.className = 'video-item';
             div.innerHTML = `
-                <div class="video-wrapper">
-                    <video class="video-preview" loop muted preload="none">
+                <div class="video-thumbnail">
+                    <img src="${video.thumbnail}" alt="${video.name}">
+                    <video class="video-preview" loop muted>
                         <source src="${video.url}" type="video/mp4">
                     </video>
-                    <img src="${video.thumbnail}" alt="${video.name}" class="video-thumbnail">
-                    <div class="video-overlay">
-                        <i class="fas fa-play-circle play-button"></i>
-                    </div>
+                    <div class="video-duration">${generateRandomDuration()}</div>
                 </div>
                 <div class="video-info">
-                    <h3>${decodeURIComponent(video.name).replace('.mp4', '')}</h3>
+                    <div class="video-title">${decodeURIComponent(video.name).replace('.mp4', '')}</div>
                     <div class="video-meta">
-                        <span><i class="fas fa-eye"></i> ${Math.floor(Math.random() * 10000) + 1000} views</span>
-                        <span><i class="fas fa-clock"></i> ${Math.floor(Math.random() * 10) + 1} min</span>
+                        <span>${generateRandomViews()} views</span>
+                        <span>${generateRandomTimestamp()}</span>
                     </div>
                 </div>
             `;
 
             const videoPreview = div.querySelector('.video-preview');
-            const videoOverlay = div.querySelector('.video-overlay');
 
             div.addEventListener('mouseenter', () => {
+                videoPreview.currentTime = 0;
                 videoPreview.play();
             });
 
             div.addEventListener('mouseleave', () => {
                 videoPreview.pause();
-                videoPreview.currentTime = 0;
-            });
-
-            videoOverlay.addEventListener('click', () => {
-                if (!ageConfirmed) {
-                    showAgeVerification(() => initializeVideoPlayer(video, index));
-                } else {
-                    initializeVideoPlayer(video, index);
-                }
             });
 
             return div;
-        }
-
-        function initializeVideoPlayer(video, index) {
-            const videoItem = document.querySelectorAll('.video-item')[index % videosPerPage];
-            videoItem.innerHTML = `
-                <div class="video-wrapper">
-                    <video id="video-${index}" class="video-js" controls preload="auto" poster="${video.thumbnail}">
-                        <source src="${video.url}" type="video/mp4">
-                        Your browser does not support video playback.
-                    </video>
-                </div>
-            `;
-
-            videojs(`video-${index}`, {
-                controls: true,
-                preload: 'auto',
-                responsive: true,
-                fluid: true
-            });
         }
 
         function renderPagination() {
@@ -368,18 +351,22 @@
             window.scrollTo(0, 0);
         }
 
-        function showAgeVerification(callback) {
-            elements.ageModal.style.display = 'flex';
+        function generateRandomDuration() {
+            const minutes = Math.floor(Math.random() * 59) + 1;
+            const seconds = Math.floor(Math.random() * 59);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
 
-            elements.agreeButton.onclick = () => {
-                ageConfirmed = true;
-                elements.ageModal.style.display = 'none';
-                callback();
-            };
+        function generateRandomViews() {
+            const views = Math.floor(Math.random() * 1000000) + 1000;
+            return views.toLocaleString() + ' views';
+        }
 
-            elements.declineButton.onclick = () => {
-                elements.ageModal.style.display = 'none';
-            };
+        function generateRandomTimestamp() {
+            const times = ['hours', 'days', 'weeks', 'months', 'years'];
+            const time = Math.floor(Math.random() * 24) + 1;
+            const timeUnit = times[Math.floor(Math.random() * times.length)];
+            return `${time} ${timeUnit} ago`;
         }
 
         document.addEventListener('DOMContentLoaded', fetchVideos);
