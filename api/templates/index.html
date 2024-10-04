@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Video Platform</title>
-    <!-- Video.js CSS -->
-    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
-    
-    <!-- Custom Styles -->
+    <title>Faster Video Platform</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,6 +11,7 @@
             margin: 0;
             padding: 0;
         }
+
         .container {
             width: 90%;
             margin: 20px auto;
@@ -23,12 +20,14 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .video-gallery {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
         }
+
         .video-item {
             background-color: #fff;
             border: 1px solid #ccc;
@@ -38,16 +37,32 @@
             width: 300px;
             text-align: center;
         }
+
         .video-item h3 {
             font-size: 1em;
             margin-bottom: 10px;
             color: #333;
         }
-        .video-item video {
+
+        .video-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        video {
+            display: none;
             width: 100%;
             height: auto;
             border-radius: 8px;
         }
+
+        .loading-spinner {
+            display: none;
+        }
+
         /* Advanced Responsive Design */
         @media (max-width: 600px) {
             .video-item {
@@ -58,33 +73,39 @@
 </head>
 <body>
 <div class="container">
-    <h1>Advanced Video Platform</h1>
+    <h1>Faster Video Platform</h1>
     <div class="video-gallery">
         {% for video in videos %}
-        <div class="video-item">
+        <div class="video-item" id="video-item-{{ loop.index }}">
             <h3>{{ video.name.replace('%20', ' ').replace('.mp4', '') }}</h3> <!-- Clean video name -->
 
-            <!-- Video.js Player -->
-            <video
-                id="my-video-{{ loop.index }}"
-                class="video-js vjs-default-skin"
-                controls
-                preload="auto"
-                width="100%"
-                height="auto"
-                poster="{{ video.url }}.jpg"
-                data-setup="{}">
-                <source src="{{ video.url }}" type="video/mp4" />
-                <source src="{{ video.url }}" type="video/webm" />
-                <source src="{{ video.url }}" type="application/x-mpegURL" />
+            <!-- Video Thumbnail -->
+            <img src="{{ video.url }}.jpg" alt="Thumbnail" onclick="playVideo('{{ loop.index }}', '{{ video.url }}')" />
+
+            <!-- Video Player (initially hidden) -->
+            <video id="video-{{ loop.index }}" controls preload="metadata">
+                <source id="video-source-{{ loop.index }}" src="" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
         {% endfor %}
     </div>
 </div>
-<!-- Video.js JavaScript -->
-<script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 
+<script>
+    // Function to load and play video on click
+    function playVideo(videoIndex, videoUrl) {
+        const videoElement = document.getElementById(`video-${videoIndex}`);
+        const videoSource = document.getElementById(`video-source-${videoIndex}`);
+
+        // Load the video source
+        videoSource.src = videoUrl;
+        videoElement.style.display = "block";
+        videoElement.load();  // Load the video
+
+        // Automatically play the video after it has loaded
+        videoElement.play();
+    }
+</script>
 </body>
 </html>
