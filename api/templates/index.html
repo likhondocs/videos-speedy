@@ -9,18 +9,18 @@
     <meta property="og:title" content="Advanced Video Platform">
     <meta property="og:description" content="Watch and interact with high-quality videos on a modern video platform.">
     <meta property="og:type" content="website">
-    <title>Enhanced Video Platform</title>
+    <title>Advanced Video Platform</title>
     <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
     <style>
         :root {
-            --primary-bg: #121212;
-            --secondary-bg: #1d1d1d;
-            --card-bg: #252525;
+            --primary-bg: #121212; /* Black shade */
+            --secondary-bg: #1d1d1d; /* Slightly lighter black */
+            --card-bg: #252525; /* Greyish black */
             --text-primary: #ffffff;
             --text-secondary: #aaaaaa;
-            --accent-color: #4caf50;
-            --error-color: #f44336;
+            --accent-color: #4caf50; /* Green for success actions */
+            --error-color: #f44336; /* Red for errors */
         }
 
         * {
@@ -55,11 +55,9 @@
         }
 
         .header-content h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
             color: var(--text-primary);
-            text-transform: uppercase;
-            letter-spacing: 2px;
         }
 
         nav {
@@ -68,7 +66,6 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .nav-container {
@@ -87,102 +84,60 @@
             color: var(--text-primary);
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s;
+            transition: color 0.3s;
             padding: 0.5rem 1rem;
             border-radius: 4px;
         }
 
         .nav-links a:hover {
             color: var(--accent-color);
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
+            background-color: var(--secondary-bg);
         }
 
         .video-gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
+            gap: 1rem;
+            margin: 1rem 0;
         }
 
         .video-item {
             background-color: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .video-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         .video-wrapper {
             position: relative;
-            padding-top: 56.25%;
-            overflow: hidden;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
         }
 
-        .video-thumbnail {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .video-item:hover .video-thumbnail {
-            transform: scale(1.1);
+        .video-js {
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            border-radius: 8px 8px 0 0;
         }
 
         .video-info {
-            padding: 1.5rem;
-            text-align: left;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            padding: 1rem;
+            text-align: center;
         }
 
         .video-info h3 {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 24px;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .video-item:hover .play-button {
-            opacity: 1;
         }
 
         footer {
@@ -199,74 +154,16 @@
 
         .social-links a {
             opacity: 0.7;
-            transition: all 0.3s;
+            transition: opacity 0.3s;
         }
 
         .social-links a:hover {
             opacity: 1;
-            transform: translateY(-3px);
         }
 
         .social-links i {
             color: var(--text-primary);
             font-size: 24px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1001;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .modal-content h2 {
-            margin-bottom: 1rem;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background-color: var(--accent-color);
-            color: white;
-        }
-
-        .btn-secondary {
-            background-color: var(--text-secondary);
-            color: var(--primary-bg);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         @media (max-width: 768px) {
@@ -275,7 +172,7 @@
             }
 
             .header-content h1 {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
 
             .nav-container {
@@ -290,7 +187,7 @@
     </style>
 </head>
 <body>
-    <div id="age-modal" class="modal">
+    <div id="age-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2>Age Verification</h2>
             <p>Please confirm that you are 18 years or older to continue.</p>
@@ -303,7 +200,7 @@
 
     <header>
         <div class="header-content">
-            <h1>Enhanced Video Platform</h1>
+            <h1>Advanced Video Platform</h1>
         </div>
     </header>
 
@@ -373,6 +270,7 @@
             currentVideos.forEach((video, index) => {
                 const videoItem = createVideoElement(video, index);
                 elements.videoGallery.appendChild(videoItem);
+                initializeVideoPlayer(index);
             });
         }
 
@@ -382,57 +280,43 @@
             div.className = 'video-item';
             div.innerHTML = `
                 <div class="video-wrapper">
-                    <img src="${video.thumbnail}" alt="${video.name}" class="video-thumbnail">
-                    <button class="play-button"><i class="fas fa-play"></i></button>
-                </div>
-                <div class="video-info">
-                    <h3>${decodeURIComponent(video.name).replace('.mp4', '')}</h3>
-                    <div class="video-meta">
-                        <span><i class="fas fa-eye"></i> ${Math.floor(Math.random() * 10000)} views</span>
-                        <span><i class="fas fa-clock"></i> ${Math.floor(Math.random() * 10) + 1} min</span>
-                    </div>
-                </div>
-            `;
-
-            const playButton = div.querySelector('.play-button');
-            playButton.addEventListener('click', () => {
-                if (!ageConfirmed) {
-                    showAgeVerification(() => initializeVideoPlayer(video, index, div));
-                } else {
-                    initializeVideoPlayer(video, index, div);
-                }
-            });
-
-            return div;
-        }
-
-        // Initialize video player
-        function initializeVideoPlayer(video, index, container) {
-            container.innerHTML = `
-                <div class="video-wrapper">
-                    <video id="video-${index}" class="video-js" controls preload="auto">
+                    <video id="video-${index}" class="video-js" controls preload="auto" poster="${video.thumbnail}">
                         <source src="${video.url}" type="video/mp4">
                         Your browser does not support video playback.
                     </video>
                 </div>
+                <div class="video-info">
+                    <h3>${decodeURIComponent(video.name).replace('.mp4', '')}</h3>
+                </div>
             `;
+            return div;
+        }
 
-            videojs(`video-${index}`, {
+        // Initialize video player
+        function initializeVideoPlayer(index) {
+            const player = videojs(`video-${index}`, {
                 controls: true,
                 preload: 'auto',
                 responsive: true,
                 fluid: true
             });
+
+            player.on('play', () => {
+                if (!ageConfirmed) {
+                    player.pause();
+                    showAgeVerification(player);
+                }
+            });
         }
 
         // Show age verification modal
-        function showAgeVerification(callback) {
+        function showAgeVerification(player) {
             elements.ageModal.style.display = 'flex';
 
             elements.agreeButton.onclick = () => {
                 ageConfirmed = true;
                 elements.ageModal.style.display = 'none';
-                callback();
+                player.play();
             };
 
             elements.declineButton.onclick = () => {
